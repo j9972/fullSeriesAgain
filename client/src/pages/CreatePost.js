@@ -2,8 +2,10 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
+  const navigate = useNavigate();
   const initialValue = {
     title: "",
     postText: "",
@@ -19,7 +21,7 @@ function CreatePost() {
   // axios.post 로 db쪽으로 데이터를 보내줌.
   const onSubmit = (data) => {
     axios.post("http://localhost:3001/posts", data).then((response) => {
-      console.log("It Worked");
+      navigate("/");
     });
   };
 

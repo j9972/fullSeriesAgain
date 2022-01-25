@@ -11,6 +11,13 @@ router.get("/", async (req, res) => {
   res.json(listOfPosts);
 });
 
+router.get("/byId/:id", async (req, res) => {
+  const id = req.params.id;
+  // findByPk 는 primary key로 데이터를 가져온다는건데 id가 각 post들을 구별해주는 key가 되는것이다
+  const post = await Posts.findByPk(id);
+  res.json(post);
+});
+
 // post request를 테스트 하기 위해서는 postman을 사용하기
 // inserting data를 하는데 sequelize가 편하며, 사용하면 된다. sequelize는 항상 async 이다
 router.post("/", async (req, res) => {
