@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
   // front-end에 보내주는 데이터에 접근하기 위해서는 req에 body 부분이 필요
   // req.body를 통헤 post.title 등 db - talbe에 접근 가능
   const post = req.body;
+  // create부분은 sequelize 부분이다
   await Posts.create(post); // create로 우리가 가져온 데이터 즉, req.body를 post테이블에 넣을 수 있다
   res.json(post);
 });
