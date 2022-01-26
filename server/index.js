@@ -19,8 +19,13 @@ app.use("/posts", postRouter);
 
 const commmentRouter = require("./routes/Comments");
 
-// ./posts로 연결하면 안된다 -> local에 연결되지 않음
+// ./comments 연결하면 안된다 -> local에 연결되지 않음
 app.use("/comments", commmentRouter);
+
+const usersRouter = require("./routes/Users");
+
+// ./auth 연결하면 안된다 -> local에 연결되지 않음
+app.use("/auth", usersRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

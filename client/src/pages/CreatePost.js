@@ -13,9 +13,9 @@ function CreatePost() {
   };
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("u must input title"),
-    postText: Yup.string().required("u must input text"),
-    username: Yup.string().min(3).max(20).required("u must input username"),
+    title: Yup.string().required("u must type title"),
+    postText: Yup.string().required("u must type text"),
+    username: Yup.string().min(3).max(20).required("u must type username"),
   });
 
   // axios.post 로 db쪽으로 데이터를 보내줌.
