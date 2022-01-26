@@ -21,6 +21,7 @@ router.get("/byId/:id", async (req, res) => {
 
 // post request를 테스트 하기 위해서는 postman을 사용하기
 // inserting data를 하는데 sequelize가 편하며, 사용하면 된다. sequelize는 항상 async 이다
+// validateToken이 생김으로써, 글을 쓰는 사람이 누군인지, validateToken가 없으면 글을 못쓰게 한다
 router.post("/", async (req, res) => {
   // front-end에 보내주는 데이터에 접근하기 위해서는 req에 body 부분이 필요
   // req.body를 통헤 post.title 등 db - talbe에 접근 가능

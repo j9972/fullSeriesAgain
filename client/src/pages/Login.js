@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 /*
 정리를 하면,
@@ -16,10 +17,17 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const login = () => {
     const data = { username, password };
     axios.post("http://localhost:3001/auth/login", data).then((response) => {
-      console.log(response.data);
+      if (response.data.error) {
+        alert(response.data.error);
+      } else {
+        sessionStorage.setItem("accessToken", response.data);
+        navigate("/");
+      }
     });
   };
 
