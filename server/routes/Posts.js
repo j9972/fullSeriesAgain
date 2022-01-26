@@ -11,6 +11,7 @@ router.get("/", async (req, res) => {
   res.json(listOfPosts);
 });
 
+// server 측의 브라우져에서 어떤 post를 띄어주려면, endpoint를 잘 따라야 한다
 router.get("/byId/:id", async (req, res) => {
   const id = req.params.id;
   // findByPk 는 primary key로 데이터를 가져온다는건데 id가 각 post들을 구별해주는 key가 되는것이다
