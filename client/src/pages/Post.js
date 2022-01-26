@@ -33,7 +33,7 @@ function Post() {
         {
           headers: {
             // 이 부분은 authMiddleware 부분에 req.header 부분 참조
-            accessToken: sessionStorage.getItem("accessToken"),
+            accessToken: localStorage.getItem("accessToken"),
           },
         }
       )
@@ -41,8 +41,11 @@ function Post() {
         if (response.data.error) {
           alert(response.data.error);
         } else {
-          // this code make comment show on browser automatically
-          const commentToAdd = { commentBody: newComment };
+          // this code make comment and username show on browser automatically
+          const commentToAdd = {
+            commentBody: newComment,
+            username: response.data.username,
+          };
           // ...는 previous array 정보들을 가져올 수 있음
           setComments([...comments, commentToAdd]);
           // 인풋창 값 초기화해준다.
@@ -80,6 +83,7 @@ function Post() {
             return (
               <div key={key} className="comment">
                 {comment.commentBody}
+                <label>Username: {comment.username}</label>
               </div>
             );
           })}

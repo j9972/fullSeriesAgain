@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const { Users } = require("../models");
 
 const { sign } = require("jsonwebtoken");
+const { validateToken } = require("../middleware/AuthMiddleware");
 
 // post request를 테스트 하기 위해서는 postman을 사용하기
 // inserting data를 하는데 sequelize가 편하며, 사용하면 된다. sequelize는 항상 async 이다
@@ -54,6 +55,11 @@ router.post("/login", async (req, res) => {
 
     res.json(accessToken);
   });
+});
+
+// 이거 만들기 전에는 console창에서 localStorage.getItem() 하면 자동 로그인이 되는데 이걸 방지하고자 함
+router.get("/auth", validateToken, (req, res) => {
+  res.json(req.user);
 });
 
 module.exports = router;
