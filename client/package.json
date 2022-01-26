@@ -28,6 +28,9 @@
       "react-app/jest"
     ]
   },
+  "browser": {
+    "zlib": false
+  },
   "browserslist": {
     "production": [
       ">0.2%",

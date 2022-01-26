@@ -24,17 +24,30 @@ function Post() {
 
   const addComment = () => {
     axios
-      .post("http://localhost:3001/comments", {
-        commentBody: newComment,
-        PostId: id,
-      })
+      .post(
+        "http://localhost:3001/comments",
+        {
+          commentBody: newComment,
+          PostId: id,
+        },
+        {
+          headers: {
+            // 이 부분은 authMiddleware 부분에 req.header 부분 참조
+            accessToken: sessionStorage.getItem("accessToken"),
+          },
+        }
+      )
       .then((response) => {
-        // this code make comment show on browser automatically
-        const commentToAdd = { commentBody: newComment };
-        // ...는 previous array 정보들을 가져올 수 있음
-        setComments([...comments, commentToAdd]);
-        // 인풋창 값 초기화해준다.
-        setNewComment("");
+        if (response.data.error) {
+          alert(response.data.error);
+        } else {
+          // this code make comment show on browser automatically
+          const commentToAdd = { commentBody: newComment };
+          // ...는 previous array 정보들을 가져올 수 있음
+          setComments([...comments, commentToAdd]);
+          // 인풋창 값 초기화해준다.
+          setNewComment("");
+        }
       });
   };
 
