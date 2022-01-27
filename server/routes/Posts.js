@@ -2,15 +2,22 @@ const express = require("express");
 const router = express.Router();
 // endpoint를 지정해줘야 하는데 이를 하는데 있어서 express와 router 연결이 팔요함
 
+const { validateToken } = require("../middleware/AuthMiddleware");
+// { validateToken } 이렇게 해야함 -> module.exports = { validateToken }
+// ->Error: Route.get() requires a callback function but got a [object Object] 이러 에러남
+
 // table - Posts, Likes
 const { Posts, Likes } = require("../models");
 
-router.get("/", async (req, res) => {
+// 여기서 validateToken를 쓰는 이유는 user를 구분해서 각기 다른 유저가 좋아요를 눌렀을때 like 양의 변화를 위함
+router.get("/", validateToken, async (req, res) => {
   // table에 있는 데이터를 가져와 보자 + Like TABLE과 연결 지어서 데이터를 가져옴
-  const listOfPosts = await Posts.findAll({
-    include: [Likes],
-  }); // table명.findAll() -> table의 모든 데이터를 가져옴
-  res.json(listOfPosts);
+  const listOfPosts = await Posts.findAll({ include: [Likes] });
+  // table명.findAll() -> table의 모든 데이터를 가져옴
+
+  // like버튼을 누를떄 안누를때를 비교하기 위한 코드 -> 하나의 버튼으로 체크하기 위해서
+  const likedPosts = await Likes.findAll({ where: { UserId: req.user.id } });
+  res.json({ listOfPosts, likedPosts });
 });
 
 // server 측의 브라우져에서 어떤 post를 띄어주려면, endpoint를 잘 따라야 한다
