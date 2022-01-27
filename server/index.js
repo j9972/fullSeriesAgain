@@ -27,6 +27,11 @@ const usersRouter = require("./routes/Users");
 // ./auth 연결하면 안된다 -> local에 연결되지 않음
 app.use("/auth", usersRouter);
 
+const likesRouter = require("./routes/Likes");
+
+// ./like 연결하면 안된다 -> local에 연결되지 않음
+app.use("/likes", likesRouter);
+
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`server is running on ${PORT}`);

@@ -2,12 +2,14 @@ const express = require("express");
 const router = express.Router();
 // endpoint를 지정해줘야 하는데 이를 하는데 있어서 express와 router 연결이 팔요함
 
-// table - Posts
-const { Posts } = require("../models");
+// table - Posts, Likes
+const { Posts, Likes } = require("../models");
 
 router.get("/", async (req, res) => {
-  // table에 있는 데이터를 가져와 보자
-  const listOfPosts = await Posts.findAll(); // table명.findAll() -> table의 모든 데이터를 가져옴
+  // table에 있는 데이터를 가져와 보자 + Like TABLE과 연결 지어서 데이터를 가져옴
+  const listOfPosts = await Posts.findAll({
+    include: [Likes],
+  }); // table명.findAll() -> table의 모든 데이터를 가져옴
   res.json(listOfPosts);
 });
 

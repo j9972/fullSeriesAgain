@@ -17,7 +17,7 @@ endpoint를 지정해주고 이를 User라는 route에서 처리 해준다.
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setAuthContext } = useContext(AuthContext);
+  const { setAuthState } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ function Login() {
         // navigate 함수를 setAuthContext 밑에 두면 로그인 했을때 홈화면으로 옮겨지지 않음
         localStorage.setItem("accessToken", response.data.token);
         navigate("/");
-        setAuthContext({
+        setAuthState({
           username: response.data.username,
           id: response.data.id,
           status: true,
