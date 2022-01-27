@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../helpers/AuthContext";
 
 function Post() {
   // post의 각 페이지드릉ㄹ 구별해줄때 useParams 사용
   let { id } = useParams();
+  const navigate = useNavigate();
   // post들을 담아 둘 객체 생성
   const [postObject, setPostObject] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const { authState } = useContext(AuthContext);
 
   // server측에서 보내주는 데이터를 axios.get으로 받아줌
   // byId/${id}는 Posts.js 파일에서 지정한 endPoint가 되는것이다
@@ -33,7 +36,7 @@ function Post() {
         {
           headers: {
             // 이 부분은 authMiddleware 부분에 req.header 부분 참조
-            accessToken: sessionStorage.getItem("accessToken"),
+            accessToken: localStorage.getItem("accessToken"),
           },
         }
       )
@@ -41,13 +44,49 @@ function Post() {
         if (response.data.error) {
           alert(response.data.error);
         } else {
-          // this code make comment show on browser automatically
-          const commentToAdd = { commentBody: newComment };
+          // this code make comment and username show on browser automatically
+          const commentToAdd = {
+            commentBody: newComment,
+            username: response.data.username,
+          };
           // ...는 previous array 정보들을 가져올 수 있음
           setComments([...comments, commentToAdd]);
           // 인풋창 값 초기화해준다.
           setNewComment("");
         }
+      });
+  };
+
+  const deleteComment = (id) => {
+    axios
+      .delete(`http://localhost:3001/comments/${id}`, {
+        headers: {
+          // 이 부분은 authMiddleware 부분에 req.header 부분 참조
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        // filter () 을 쓸건데 진짜 중요함
+        setComments(
+          comments.filter((val) => {
+            return val.id !== id;
+          })
+        );
+      });
+  };
+
+  // "delete" show on browser imeediately with back & client logic
+  const deletePost = (id) => {
+    axios
+      .delete(`http://localhost:3001/posts/${id}`, {
+        headers: {
+          // 이 부분은 authMiddleware 부분에 req.header 부분 참조
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        // filter () 을 쓸건데 진짜 중요함
+        navigate("/");
       });
   };
 
@@ -59,7 +98,18 @@ function Post() {
         <div className="post" id="individual">
           <div className="title"> {postObject.title} </div>
           <div className="body">{postObject.postText}</div>
-          <div className="footer">{postObject.username}</div>
+          <div className="footer">
+            {postObject.username}{" "}
+            {authState.username === postObject.username && (
+              <button
+                onClick={() => {
+                  deletePost(postObject.id);
+                }}
+              >
+                Delete Post
+              </button>
+            )}
+          </div>
         </div>
       </div>
       <div className="rightSide">
@@ -80,6 +130,17 @@ function Post() {
             return (
               <div key={key} className="comment">
                 {comment.commentBody}
+                <label>Username: {comment.username}</label>
+                {/* user이름과 게시물의 등록자 이름이 같을때만 버튼이 생기게 함 */}
+                {authState.username === comment.username && (
+                  <button
+                    onClick={() => {
+                      deleteComment(comment.id);
+                    }}
+                  >
+                    X
+                  </button>
+                )}
               </div>
             );
           })}

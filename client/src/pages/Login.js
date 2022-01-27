@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
 
 /*
 정리를 하면,
@@ -16,6 +17,7 @@ endpoint를 지정해주고 이를 User라는 route에서 처리 해준다.
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { setAuthState } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -25,20 +27,30 @@ function Login() {
       if (response.data.error) {
         alert(response.data.error);
       } else {
-        sessionStorage.setItem("accessToken", response.data);
+        // storage.getItem(keyName,keyValue);
+        // sessionStorage는 새로고침하면 로그인한게 사라지는데, localStorage는 로그인 상태를  유지해줌
+        // navigate 함수를 setAuthContext 밑에 두면 로그인 했을때 홈화면으로 옮겨지지 않음
+        localStorage.setItem("accessToken", response.data.token);
         navigate("/");
+        setAuthState({
+          username: response.data.username,
+          id: response.data.id,
+          status: true,
+        });
       }
     });
   };
 
   return (
-    <div>
+    <div className="loginContainer">
+      <label>Username:</label>
       <input
         type="text"
         onChange={(e) => {
           setUsername(e.target.value);
         }}
       />
+      <label>Password:</label>
       <input
         type="password"
         onChange={(e) => {

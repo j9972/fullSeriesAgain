@@ -15,6 +15,8 @@ const validateToken = (req, res, next) => {
       // sign - verify를 이으면서 token을 보낸다
       // Back에서 token을 생성하고 이 부분에서 user들의 token을 확인해 유저를 구분한다
       const validToken = verify(accessToken, "importantSecretForSecurity");
+      // 다른 파일에 validToken을 전달하기 위함( 댓글을 달때 어떤 user가 적었는지 알 수 있음 )
+      req.user = validToken;
 
       if (validToken) {
         return next();
