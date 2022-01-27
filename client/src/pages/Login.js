@@ -30,9 +30,13 @@ function Login() {
         // storage.getItem(keyName,keyValue);
         // sessionStorage는 새로고침하면 로그인한게 사라지는데, localStorage는 로그인 상태를  유지해줌
         // navigate 함수를 setAuthContext 밑에 두면 로그인 했을때 홈화면으로 옮겨지지 않음
-        localStorage.setItem("accessToken", response.data);
+        localStorage.setItem("accessToken", response.data.token);
         navigate("/");
-        setAuthContext(true);
+        setAuthContext({
+          username: response.data.username,
+          id: response.data.id,
+          status: true,
+        });
       }
     });
   };

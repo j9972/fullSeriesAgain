@@ -33,4 +33,17 @@ router.post("/", validateToken, async (req, res) => {
   res.json(comment);
 });
 
+// endpoint는 중요하지 않고 지우고자 하는 댓글의 id를 알아야 함 -> each post each commendId
+router.delete("/:commentId", validateToken, async (req, res) => {
+  const commentId = req.params.commentId;
+
+  await Comments.destroy({
+    where: {
+      id: commentId,
+    },
+  });
+
+  res.json("DELETE SUCCESS");
+});
+
 module.exports = router;

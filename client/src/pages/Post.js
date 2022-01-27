@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../helpers/AuthContext";
 
 function Post() {
   // post의 각 페이지드릉ㄹ 구별해줄때 useParams 사용
@@ -9,6 +10,7 @@ function Post() {
   const [postObject, setPostObject] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const { authState } = useContext(AuthContext);
 
   // server측에서 보내주는 데이터를 axios.get으로 받아줌
   // byId/${id}는 Posts.js 파일에서 지정한 endPoint가 되는것이다
@@ -54,6 +56,24 @@ function Post() {
       });
   };
 
+  const deleteComment = (id) => {
+    axios
+      .delete(`http://localhost:3001/comments/${id}`, {
+        headers: {
+          // 이 부분은 authMiddleware 부분에 req.header 부분 참조
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        // filter () 을 쓸건데 진짜 중요함
+        setComments(
+          comments.filter((val) => {
+            return val.id !== id;
+          })
+        );
+      });
+  };
+
   // comment 부분에 setnewComment로 바뀌는 comment 데이터를 잡아옴
   // input 창 초기값으로 value={newComment} 넣어두면됨
   return (
@@ -84,6 +104,15 @@ function Post() {
               <div key={key} className="comment">
                 {comment.commentBody}
                 <label>Username: {comment.username}</label>
+                {authState.username === comment.username && (
+                  <button
+                    onClick={() => {
+                      deleteComment(comment.id);
+                    }}
+                  >
+                    X
+                  </button>
+                )}
               </div>
             );
           })}

@@ -7,8 +7,8 @@ const bcrypt = require("bcrypt");
 // table - Posts
 const { Users } = require("../models");
 
-const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middleware/AuthMiddleware");
+const { sign } = require("jsonwebtoken");
 
 // post request를 테스트 하기 위해서는 postman을 사용하기
 // inserting data를 하는데 sequelize가 편하며, 사용하면 된다. sequelize는 항상 async 이다
@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
       "importantSecretForSecurity"
     );
 
-    res.json(accessToken);
+    res.json({ token: accessToken, username, id: user.id });
   });
 });
 
