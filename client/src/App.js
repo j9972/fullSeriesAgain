@@ -79,20 +79,26 @@ function App() {
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
           <div className="navbar">
-            <Link to="/">Home</Link>
-            <Link to="/createpost">Create a Post</Link>
-            {/* {!authState && ( -> &&를 ?로 만들어서 삼항연산자로 로그인 했을때 로그아웃했을때를 보여줌 
+            <div className="links">
+              {/* {!authState && ( -> &&를 ?로 만들어서 삼항연산자로 로그인 했을때 로그아웃했을때를 보여줌 
               <>
                 <Link to="/login">Login</Link>
                 <Link to="/registration">Registration</Link>
               </>
             )} */}
-            {!authState.status && (
-              <>
-                <Link to="/login"> Login</Link>
-                <Link to="/registration"> Registration</Link>
-              </>
-            )}
+              {/* 삼항 연산자를 통해 로그인의 유무에 따라 navbar를 바꿔줌 */}
+              {!authState.status ? (
+                <>
+                  <Link to="/login"> Login</Link>
+                  <Link to="/registration"> Registration</Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/">Home</Link>
+                  <Link to="/createpost">Create a Post</Link>
+                </>
+              )}
+            </div>
             <div className="loggedInContainer">
               <h1>{authState.username} </h1>
               {authState.status && <button onClick={logout}> Logout</button>}

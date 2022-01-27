@@ -1,31 +1,42 @@
 import React from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { AuthContext } from "../helpers/AuthContext";
 
 function Home() {
   // Posts에 대해서 담을 배열을 useState를 통해 state를 나타내고 있음
   const [listOfPosts, setListOfPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
   const navigate = useNavigate();
+  const { authState } = useContext(AuthContext);
 
   // axios를 통해서 : server - localhost:3001/posts 이라는 Endpoint에 있는 데이터를 가져올것임
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/posts", {
-        headers: { accessToken: localStorage.getItem("accessToken") },
-      })
-      .then((response) => {
-        // setListOfPosts(response.data); -> likedPost에 대한 변화에 반응을 안해줘서 이렇게만 하면 에러,
-        // 지금과 같이 header도 필요
-        setListOfPosts(response.data.listOfPosts);
-        setLikedPosts(
-          response.data.likedPosts.map((like) => {
-            return like.PostId;
-          })
-        );
-      });
+    /*
+    if (!authState.status) {
+      navigate("/login");
+    } -> 이렇게만 했을때 로그인이 된 상태에서 새로고침을 했을때 로그인 화면이 뜸,,, 홈페이지가 뜨게 고쳐야함
+    */
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    } else {
+      axios
+        .get("http://localhost:3001/posts", {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        })
+        .then((response) => {
+          // setListOfPosts(response.data); -> likedPost에 대한 변화에 반응을 안해줘서 이렇게만 하면 에러,
+          // 지금과 같이 header도 필요
+          setListOfPosts(response.data.listOfPosts);
+          setLikedPosts(
+            response.data.likedPosts.map((like) => {
+              return like.PostId;
+            })
+          );
+        });
+    }
   }, []);
 
   const likeAPost = (postId) => {

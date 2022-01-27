@@ -43,7 +43,7 @@ function Registration() {
         validationSchema={validationSchema}
       >
         <Form className="formContainer">
-          <label>Uswename: </label>
+          <label>Username: </label>
           <ErrorMessage name="username" component="span" />
           <Field
             autoComplete="off"

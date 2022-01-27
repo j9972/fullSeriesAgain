@@ -31,13 +31,28 @@ router.get("/byId/:id", async (req, res) => {
 // post request를 테스트 하기 위해서는 postman을 사용하기
 // inserting data를 하는데 sequelize가 편하며, 사용하면 된다. sequelize는 항상 async 이다
 // validateToken이 생김으로써, 글을 쓰는 사람이 누군인지, validateToken가 없으면 글을 못쓰게 한다
-router.post("/", async (req, res) => {
+// validateToken -> username을 대체할 수 있다.
+router.post("/", validateToken, async (req, res) => {
   // front-end에 보내주는 데이터에 접근하기 위해서는 req에 body 부분이 필요
   // req.body를 통헤 post.title 등 db - talbe에 접근 가능
   const post = req.body;
+  post.username = req.user.username; // username field를 지우고 이로 대체한다
   // create부분은 sequelize 부분이다
   await Posts.create(post); // create로 우리가 가져온 데이터 즉, req.body를 post테이블에 넣을 수 있다
   res.json(post);
+});
+
+// same way with delete commendId
+router.delete("/:postId", validateToken, async (req, res) => {
+  const postId = req.params.postId;
+
+  await Posts.destroy({
+    where: {
+      id: postId,
+    },
+  });
+
+  res.json("DELETE SUCCESS");
 });
 
 module.exports = router;
