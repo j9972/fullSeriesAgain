@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { AuthContext } from "../helpers/AuthContext";
 
@@ -94,7 +94,11 @@ function Home() {
               {value.postText}
             </div>
             <div className="footer">
-              <div className="username">{value.username}</div>
+              <div className="username">
+                {/* <Link to={`/profile/${value.UserId}`}>로 유저 이름을 누르면 프로필로 이동하게 해줌 */}
+                {/* link to에 연결된 syntax주의 */}
+                <Link to={`/profile/${value.UserId}`}>{value.username}</Link>
+              </div>
               <div className="buttons">
                 <ThumbUpIcon
                   onClick={() => {

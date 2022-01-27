@@ -62,4 +62,18 @@ router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
 });
 
+// 다른 user도 나의 profile을 볼 수 있게 해야하므로, validateToken은 쓰면 안됨
+// 나만이 할 수있게 하는거에서 validateToken을 사용 -> 나만 내가쓴 댓글 지우기, 내가 적은 post 지우기
+// 데이터는 postman에서 볼 수 있음
+router.get("/basicInfo/:id", async (req, res) => {
+  const id = req.params.id;
+
+  // id로 구변 해야 하므로, primary key 로 id 지정 , password는 데이터에 포함되지 않게 하기
+  const basicInfo = await Users.findByPk(id, {
+    attributes: { exclude: ["password"] },
+  });
+
+  res.json(basicInfo);
+});
+
 module.exports = router;

@@ -37,6 +37,7 @@ router.post("/", validateToken, async (req, res) => {
   // req.body를 통헤 post.title 등 db - talbe에 접근 가능
   const post = req.body;
   post.username = req.user.username; // username field를 지우고 이로 대체한다
+  post.UserId = req.user.id; // post 테이블의 userId가 null이 아닌 각각 값을 준다 success
   // create부분은 sequelize 부분이다
   await Posts.create(post); // create로 우리가 가져온 데이터 즉, req.body를 post테이블에 넣을 수 있다
   res.json(post);
@@ -53,6 +54,18 @@ router.delete("/:postId", validateToken, async (req, res) => {
   });
 
   res.json("DELETE SUCCESS");
+});
+
+// profile에 들어갔을때 그 user가 적은 모든 post들을 보여주고자 함
+// byuserid의 params는 각기 post가 가지는 UserID를 판단해서 알 수 있음
+router.get("/byuserId/:id", async (req, res) => {
+  const id = req.params.id;
+  // findByPk 는 primary key로 데이터를 가져온다는건데 id가 각 post들을 구별해주는 key가 되는것이다
+  const listOfPosts = await Posts.findAll({
+    where: { UserId: id },
+    include: [Likes],
+  });
+  res.json(listOfPosts);
 });
 
 module.exports = router;
