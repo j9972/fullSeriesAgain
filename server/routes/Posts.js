@@ -43,6 +43,21 @@ router.post("/", validateToken, async (req, res) => {
   res.json(post);
 });
 
+// router.post("/") 와 유사
+// validateToken을 이용해서 각 게시물을 누가 작성했는지도 알고 각각의 new version으로 update
+router.put("/title", validateToken, async (req, res) => {
+  const { newTitle, id } = req.body; // 각각의 post들의 id들에 따른 post title
+  await Posts.update({ title: newTitle }, { where: { id } });
+  res.json(newTitle);
+});
+
+// router.post("/") 와 유사
+router.put("/postText", validateToken, async (req, res) => {
+  const { newText, id } = req.body; // 각각의 post들의 id들에 따른 post title
+  await Posts.update({ postText: newText }, { where: { id } });
+  res.json(newText);
+});
+
 // same way with delete commendId
 router.delete("/:postId", validateToken, async (req, res) => {
   const postId = req.params.postId;

@@ -85,9 +85,43 @@ function Post() {
         },
       })
       .then(() => {
-        // filter () 을 쓸건데 진짜 중요함
         navigate("/");
       });
+  };
+
+  // axios.put을 이용해 게시물안에서 title, postText의 update를하고, change ui immediately
+  const editPost = (option) => {
+    if (option === "title") {
+      let newTitle = prompt("Enter New Title: ");
+      axios.put(
+        "http://localhost:3001/posts/title",
+        {
+          newTitle,
+          id,
+        },
+        {
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+          },
+        }
+      );
+      setPostObject({ ...postObject, title: newTitle });
+    } else {
+      let newPostText = prompt("Enter New Text: ");
+      axios.put(
+        "http://localhost:3001/posts/postText",
+        {
+          newText: newPostText,
+          id,
+        },
+        {
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+          },
+        }
+      );
+      setPostObject({ ...postObject, postText: newPostText });
+    }
   };
 
   // comment 부분에 setnewComment로 바뀌는 comment 데이터를 잡아옴
@@ -96,8 +130,26 @@ function Post() {
     <div className="postPage">
       <div className="leftSide">
         <div className="post" id="individual">
-          <div className="title"> {postObject.title} </div>
-          <div className="body">{postObject.postText}</div>
+          <div
+            className="title"
+            onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost("title");
+              }
+            }}
+          >
+            {postObject.title}
+          </div>
+          <div
+            className="body"
+            onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost("body");
+              }
+            }}
+          >
+            {postObject.postText}
+          </div>
           <div className="footer">
             {postObject.username}{" "}
             {authState.username === postObject.username && (

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../helpers/AuthContext";
 
 function Profile() {
   let { id } = useParams();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [listOfPosts, setListOfPosts] = useState([]);
+  const { authState } = useContext(AuthContext);
 
   // profile에 들어갔을때 누구의 profile인지 알 수 있게 해줌
   useEffect(() => {
@@ -22,6 +24,15 @@ function Profile() {
     <div className="profilePageContainer">
       <div className="basicInfo">
         <h1>Username: {username}</h1>
+        {authState.username === username && (
+          <button
+            onClick={() => {
+              navigate("/changepassword");
+            }}
+          >
+            Change my password
+          </button>
+        )}
       </div>
       <div className="listOfPosts">
         {listOfPosts.map((value, key) => {
