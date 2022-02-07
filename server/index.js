@@ -4,6 +4,8 @@ const PORT = 3001;
 
 const cors = require("cors");
 
+require("dotenv").config();
+
 // server측에서 데이터를 json 형식으로 받을때 필요하다
 app.use(express.json());
 // client측에서 npm start를통헤  브라우져에 화면을 띄울때 나올 수 있는 cors문제 해결을 위해 필요
@@ -32,8 +34,13 @@ const likesRouter = require("./routes/Likes");
 // ./like 연결하면 안된다 -> local에 연결되지 않음
 app.use("/likes", likesRouter);
 
-db.sequelize.sync().then(() => {
-  app.listen(PORT, () => {
-    console.log(`server is running on ${PORT}`);
+db.sequelize
+  .sync()
+  .then(() => {
+    app.listen(process.env.PORT || 3001, () => {
+      console.log(`server is running on ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
   });
-});

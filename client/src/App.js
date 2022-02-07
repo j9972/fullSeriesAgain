@@ -31,7 +31,7 @@ function App() {
     //   setAuthState(true);
     // } -> 얘를 axios를 써서 만들어봄
     axios
-      .get("http://localhost:3001/auth/auth", {
+      .get("https://full-stack-api-jung-pedro.herokuapp.com/auth/auth", {
         headers: {
           accessToken: localStorage.getItem("accessToken"),
         },

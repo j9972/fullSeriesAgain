@@ -16,19 +16,23 @@ function Post() {
   // server측에서 보내주는 데이터를 axios.get으로 받아줌
   // byId/${id}는 Posts.js 파일에서 지정한 endPoint가 되는것이다
   useEffect(() => {
-    axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
-      setPostObject(response.data);
-    });
+    axios
+      .get(`https://full-stack-api-jung-pedro.herokuapp.com/posts/byId/${id}`)
+      .then((response) => {
+        setPostObject(response.data);
+      });
 
-    axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
-      setComments(response.data);
-    });
+    axios
+      .get(`https://full-stack-api-jung-pedro.herokuapp.com/comments/${id}`)
+      .then((response) => {
+        setComments(response.data);
+      });
   }, []);
 
   const addComment = () => {
     axios
       .post(
-        "http://localhost:3001/comments",
+        "https://full-stack-api-jung-pedro.herokuapp.com/comments",
         {
           commentBody: newComment,
           PostId: id,
@@ -59,12 +63,15 @@ function Post() {
 
   const deleteComment = (id) => {
     axios
-      .delete(`http://localhost:3001/comments/${id}`, {
-        headers: {
-          // 이 부분은 authMiddleware 부분에 req.header 부분 참조
-          accessToken: localStorage.getItem("accessToken"),
-        },
-      })
+      .delete(
+        `https://full-stack-api-jung-pedro.herokuapp.com/comments/${id}`,
+        {
+          headers: {
+            // 이 부분은 authMiddleware 부분에 req.header 부분 참조
+            accessToken: localStorage.getItem("accessToken"),
+          },
+        }
+      )
       .then(() => {
         // filter () 을 쓸건데 진짜 중요함
         setComments(
@@ -78,7 +85,7 @@ function Post() {
   // "delete" show on browser imeediately with back & client logic
   const deletePost = (id) => {
     axios
-      .delete(`http://localhost:3001/posts/${id}`, {
+      .delete(`https://full-stack-api-jung-pedro.herokuapp.com/posts/${id}`, {
         headers: {
           // 이 부분은 authMiddleware 부분에 req.header 부분 참조
           accessToken: localStorage.getItem("accessToken"),
@@ -94,7 +101,7 @@ function Post() {
     if (option === "title") {
       let newTitle = prompt("Enter New Title: ");
       axios.put(
-        "http://localhost:3001/posts/title",
+        "https://full-stack-api-jung-pedro.herokuapp.com/posts/title",
         {
           newTitle,
           id,
@@ -109,7 +116,7 @@ function Post() {
     } else {
       let newPostText = prompt("Enter New Text: ");
       axios.put(
-        "http://localhost:3001/posts/postText",
+        "https://full-stack-api-jung-pedro.herokuapp.com/posts/postText",
         {
           newText: newPostText,
           id,
