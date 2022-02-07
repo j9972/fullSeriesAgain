@@ -12,11 +12,11 @@ function Profile() {
 
   // profile에 들어갔을때 누구의 profile인지 알 수 있게 해줌
   useEffect(() => {
-    axios.get(`http://localhost:3001/auth/basicInfo/${id}`).then((response) => {
+    axios.get(`https://full-stack-api-jung-pedro.herokuapp.com/auth/basicInfo/${id}`).then((response) => {
       setUsername(response.data.username);
     });
 
-    axios.get(`http://localhost:3001/posts/byuserId/${id}`).then((response) => {
+    axios.get(`https://full-stack-api-jung-pedro.herokuapp.com/posts/byuserId/${id}`).then((response) => {
       setListOfPosts(response.data);
     });
   }, []);

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 // endpoint를 지정해줘야 하는데 이를 하는데 있어서 express와 router 연결이 팔요함
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // table - Posts
 const { Users } = require("../models");

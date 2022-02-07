@@ -29,10 +29,12 @@ function Registration() {
 
   // axios.post 로 db쪽으로 데이터를 보내줌.
   const onSubmit = (data) => {
-    axios.post("http://localhost:3001/auth", data).then((response) => {
-      console.log(data);
-      //navigate("/");
-    });
+    axios
+      .post("https://full-stack-api-jung-pedro.herokuapp.com/auth", data)
+      .then((response) => {
+        console.log(data);
+        //navigate("/");
+      });
   };
 
   return (
